@@ -15,7 +15,8 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     private var lastUpdateTime : TimeInterval = 0
-    private var spinnyNode : SKShapeNode?
+    private var spinnySqaure : SKShapeNode?
+    private var Circle : SKShapeNode?
     
     override func sceneDidLoad() {
 
@@ -23,28 +24,47 @@ class GameScene: SKScene {
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w))
+        self.spinnySqaure = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w))
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        if let spinnySqaure = self.spinnySqaure {
+            spinnySqaure.lineWidth = 2.5
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(M_PI), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5)]))
-            //spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.fadeOut(withDuration: 0.5),SKAction.removeFromParent()]))
+            spinnySqaure.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(M_PI), duration: 1)))
+            spinnySqaure.run(SKAction.sequence([SKAction.wait(forDuration: 0.5)]))
+            spinnySqaure.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.fadeOut(withDuration: 2),SKAction.removeFromParent()]))
+        }
+        self.Circle = SKShapeNode.init(circleOfRadius: w * 0.5)
+        
+        if let circle = self.Circle {
+            circle.lineWidth = 2.5
+            circle.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), SKAction.fadeOut(withDuration: 2),SKAction.removeFromParent()]))
         }
     }
     
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
+        switch Int(arc4random_uniform(2)){
+            case 0:
+                if let n = self.spinnySqaure?.copy() as! SKShapeNode? {
+                    n.position = pos
+                    n.strokeColor = SKColor.green
+                    self.addChild(n)
+                }
+                break
+            case 1:
+                if let n = self.Circle?.copy() as! SKShapeNode? {
+                    n.position = pos
+                    n.strokeColor = SKColor.green
+                    self.addChild(n)
+                }
+                break
+            default:
+                break
         }
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        if let n = self.spinnySqaure?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.blue
             self.addChild(n)
@@ -52,7 +72,7 @@ class GameScene: SKScene {
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        if let n = self.spinnySqaure?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.red
             self.addChild(n)
